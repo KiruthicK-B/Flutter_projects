@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
-//import 'package:carousel_slider/carousel_slider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,9 +9,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignInScreen(), // Your SignInScreen widget.
+      initialRoute: '/signin', // Define the initial route
+      routes: {
+        '/signin': (context) => const SignInScreen(),
+        '/signup': (context) => const SignUpScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
+        // Add more routes if needed
+      },
     );
   }
 }
@@ -25,55 +29,40 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CarouselSlider(
-        options: CarouselOptions(
-          height: MediaQuery.of(context).size.height,
-          viewportFraction: 1.0,
-          enableInfiniteScroll: false,
-        ),
-        items: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/onboarding_image.png', height: 200), // Add your image asset here
-              const Text(
-                "Let's Get Started",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/Login');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(24),
-                ),
-                child: const Text('Next'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/signin');
-                },
-                child: const Text('Skip'),
-              )
-            ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset('assets/onboarding_image.png', height: 200), // Add your image asset here
+          const Text(
+            "Let's Get Started",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/signin'); // Navigate to SignInScreen
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(24),
+            ),
+            child: const Text('Next'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/signin'); // Navigate to SignInScreen
+            },
+            child: const Text('Skip'),
           ),
         ],
       ),
     );
   }
-  
-  // ignore: non_constant_identifier_names
-  CarouselSlider({required options, required List<Column> items}) {}
-  
-  // ignore: non_constant_identifier_names
-  CarouselOptions({required double height, required double viewportFraction, required bool enableInfiniteScroll}) {}
 }
 
 // Sign-in screen
@@ -89,13 +78,25 @@ class SignInScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/logo.png', height: 80), // Add logo here
-            const SizedBox(height: 20),
-            const Text(
-              'GeoAt',
-              style: TextStyle(fontSize: 32, color: Colors.green, fontWeight: FontWeight.bold),
+            // Logo
+            Image.asset(
+              'assets/logo.png', // Make sure this image exists in the assets folder
+              height: 80,
+              width: 80,
+              fit: BoxFit.contain,
             ),
             const SizedBox(height: 20),
+            // "GeoAt" Text
+            const Text(
+              'GeoAt',
+              style: TextStyle(
+                fontSize: 32,
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Email Input
             const TextField(
               decoration: InputDecoration(
                 labelText: 'Email',
@@ -104,6 +105,7 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Password Input
             const TextField(
               obscureText: true,
               decoration: InputDecoration(
@@ -113,6 +115,7 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Remember Me and Forgot Password Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -125,6 +128,7 @@ class SignInScreen extends StatelessWidget {
                 const Text('Forgot Password?', style: TextStyle(color: Colors.green)),
               ],
             ),
+            // Sign In Button
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
@@ -136,6 +140,7 @@ class SignInScreen extends StatelessWidget {
             const SizedBox(height: 10),
             const Text('OR'),
             const SizedBox(height: 10),
+            // Login with Google Button
             ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.login),
@@ -146,6 +151,7 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Login with Facebook Button
             ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.facebook),
@@ -156,18 +162,20 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Sign up link
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/signup');
               },
               child: const Text('Don’t have an account? Sign up'),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
 // Sign-up screen
 class SignUpScreen extends StatelessWidget {
@@ -176,12 +184,33 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Add Logo and App Name ("GeoAt") here
+            Image.asset(
+              'assets/logo.png', // Path to your logo asset
+              height: 80,
+              width: 80,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'GeoAt',
+              style: TextStyle(
+                fontSize: 32,
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Full Name Input Field
             const TextField(
               decoration: InputDecoration(
                 labelText: 'Full name',
@@ -190,6 +219,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Email Input Field
             const TextField(
               decoration: InputDecoration(
                 labelText: 'Email',
@@ -198,6 +228,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Password Input Field
             const TextField(
               obscureText: true,
               decoration: InputDecoration(
@@ -207,6 +238,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Confirm Password Input Field
             const TextField(
               obscureText: true,
               decoration: InputDecoration(
@@ -216,6 +248,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // Sign-Up Button
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
@@ -227,6 +260,7 @@ class SignUpScreen extends StatelessWidget {
             const SizedBox(height: 10),
             const Text('OR'),
             const SizedBox(height: 10),
+            // Sign Up with Google Button
             ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.login),
@@ -237,6 +271,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Sign Up with Facebook Button
             ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.facebook),
@@ -247,12 +282,13 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Already have an account? Sign in link
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/signin');
+                Navigator.pushNamed(context, '/signin'); // Navigate to SignInScreen
               },
               child: const Text('Already have an account? Sign in'),
-            )
+            ),
           ],
         ),
       ),
