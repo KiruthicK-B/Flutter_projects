@@ -80,13 +80,13 @@ class SignInScreen extends StatelessWidget {
           children: [
             // Logo
             Image.asset(
-              'assets/logo.png', // Make sure this image exists in the assets folder
+              'assets/logo.png',
               height: 80,
               width: 80,
               fit: BoxFit.contain,
             ),
             const SizedBox(height: 20),
-            // "GeoAt" Text
+            // App Name
             const Text(
               'GeoAt',
               style: TextStyle(
@@ -115,22 +115,12 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            // Remember Me and Forgot Password Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Checkbox(value: false, onChanged: (bool? value) {}),
-                    const Text('Remember Me'),
-                  ],
-                ),
-                const Text('Forgot Password?', style: TextStyle(color: Colors.green)),
-              ],
-            ),
             // Sign In Button
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // Show loading and navigate to home after sign-in
+                _navigateWithLoading(context, '/home');
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 minimumSize: const Size(double.infinity, 50),
@@ -138,34 +128,11 @@ class SignInScreen extends StatelessWidget {
               child: const Text('SIGN IN'),
             ),
             const SizedBox(height: 10),
-            const Text('OR'),
-            const SizedBox(height: 10),
-            // Login with Google Button
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.login),
-              label: const Text('Login with Google'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                minimumSize: const Size(double.infinity, 50),
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Login with Facebook Button
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.facebook),
-              label: const Text('Login with Facebook'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                minimumSize: const Size(double.infinity, 50),
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Sign up link
+            // Sign-Up Link
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/signup');
+                // Show loading before navigating to sign-up
+                _navigateWithLoading(context, '/signup');
               },
               child: const Text('Don’t have an account? Sign up'),
             ),
@@ -176,26 +143,22 @@ class SignInScreen extends StatelessWidget {
   }
 }
 
-
-// Sign-up screen
+//sign up_screen
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Add Logo and App Name ("GeoAt") here
+            // Logo and App Name
             Image.asset(
-              'assets/logo.png', // Path to your logo asset
+              'assets/logo.png',
               height: 80,
               width: 80,
               fit: BoxFit.contain,
@@ -250,7 +213,10 @@ class SignUpScreen extends StatelessWidget {
             const SizedBox(height: 20),
             // Sign-Up Button
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // Show loading and navigate to sign-in after sign-up
+                _navigateWithLoading(context, '/signin');
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 minimumSize: const Size(double.infinity, 50),
@@ -258,34 +224,11 @@ class SignUpScreen extends StatelessWidget {
               child: const Text('SIGN UP'),
             ),
             const SizedBox(height: 10),
-            const Text('OR'),
-            const SizedBox(height: 10),
-            // Sign Up with Google Button
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.login),
-              label: const Text('Sign up with Google'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                minimumSize: const Size(double.infinity, 50),
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Sign Up with Facebook Button
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.facebook),
-              label: const Text('Sign up with Facebook'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                minimumSize: const Size(double.infinity, 50),
-              ),
-            ),
-            const SizedBox(height: 10),
             // Already have an account? Sign in link
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/signin'); // Navigate to SignInScreen
+                // Show loading before navigating to sign-in
+                _navigateWithLoading(context, '/signin');
               },
               child: const Text('Already have an account? Sign in'),
             ),
@@ -294,4 +237,41 @@ class SignUpScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class LoadingScreen extends StatelessWidget {
+  const LoadingScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircularProgressIndicator(),
+            SizedBox(height: 20),
+            Text('Loading...', style: TextStyle(fontSize: 18)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+Future<void> _navigateWithLoading(BuildContext context, String route) async {
+  // Show loading screen
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const LoadingScreen()),
+  );
+
+  // Simulate a delay
+  await Future.delayed(const Duration(seconds: 2));
+
+  // Navigate to the actual screen after the delay
+  Navigator.pushReplacementNamed(context, route);
 }
