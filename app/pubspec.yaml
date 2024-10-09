@@ -26,5 +26,11 @@ flutter:
   # The assets to include in the project (your images)
   assets:
     - assets/logo.png
-    - assets/logo.png
+    - assets/onboarding_image.png
+    - assets/geoat_earth.png
+    - assets/Splash.png
+    - assets/Splash2.png
+    - assets/Splash3.png
+    - assets/Splash3.jpg
+
   uses-material-design: true
