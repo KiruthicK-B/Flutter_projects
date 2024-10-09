@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -44,7 +46,7 @@ class OnboardingScreen extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/signin'); // Navigate to SignInScreen
+              _navigateWithLoading(context, '/signin'); // Navigate to SignInScreen with loading screen
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
@@ -55,7 +57,7 @@ class OnboardingScreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/signin'); // Navigate to SignInScreen
+              _navigateWithLoading(context, '/signin'); // Navigate to SignInScreen with loading screen
             },
             child: const Text('Skip'),
           ),
@@ -80,20 +82,28 @@ class SignInScreen extends StatelessWidget {
           children: [
             // Logo
             Image.asset(
-              'assets/logo.png',
+              'assets/logo.png', // Make sure this image exists in the assets folder
               height: 80,
               width: 80,
               fit: BoxFit.contain,
             ),
             const SizedBox(height: 20),
-            // App Name
-            const Text(
-              'GeoAt',
-              style: TextStyle(
-                fontSize: 32,
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-              ),
+            // Animated company name (GeoAt) with transition
+            AnimatedBuilder(
+              animation: ModalRoute.of(context)!.animation!,
+              builder: (context, child) {
+                return FadeTransition(
+                  opacity: ModalRoute.of(context)!.animation!,
+                  child: const Text(
+                    'GeoAt',
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 20),
             // Email Input
@@ -115,11 +125,26 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Remember Me and Forgot Password Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Checkbox(value: false, onChanged: (bool? value) {}),
+                    const Text('Remember Me'),
+                  ],
+                ),
+                const Text(
+                  'Forgot Password?',
+                  style: TextStyle(color: Colors.green),
+                ),
+              ],
+            ),
             // Sign In Button
             ElevatedButton(
               onPressed: () {
-                // Show loading and navigate to home after sign-in
-                _navigateWithLoading(context, '/home');
+                _navigateWithLoading(context, '/signup');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
@@ -128,14 +153,31 @@ class SignInScreen extends StatelessWidget {
               child: const Text('SIGN IN'),
             ),
             const SizedBox(height: 10),
-            // Sign-Up Link
+            // Sign up link
             TextButton(
               onPressed: () {
-                // Show loading before navigating to sign-up
-                _navigateWithLoading(context, '/signup');
+                Navigator.pushNamed(context, '/signup');
               },
               child: const Text('Don’t have an account? Sign up'),
             ),
+            const Spacer(),
+            // Contact Information Row at the bottom
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Contact: '),
+                Text('123-456-7890', style: TextStyle(color: Colors.blue)),
+                SizedBox(width: 10),
+                Text('Email: '),
+                Text('support@geoat.com', style: TextStyle(color: Colors.blue)),
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Terms and Conditions & Copyright Info
+            const Text('Terms & Conditions'),
+            const SizedBox(height: 10),
+            const Text('© 2024 GeoAt. All rights reserved.'),
+            const SizedBox(height: 10),
           ],
         ),
       ),
@@ -143,14 +185,17 @@ class SignInScreen extends StatelessWidget {
   }
 }
 
-//sign up_screen
+// Sign-up screen
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -158,19 +203,28 @@ class SignUpScreen extends StatelessWidget {
           children: [
             // Logo and App Name
             Image.asset(
-              'assets/logo.png',
+              'assets/logo.png', // Path to your logo asset
               height: 80,
               width: 80,
               fit: BoxFit.contain,
             ),
             const SizedBox(height: 20),
-            const Text(
-              'GeoAt',
-              style: TextStyle(
-                fontSize: 32,
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-              ),
+            // Animated company name (GeoAt) with transition
+            AnimatedBuilder(
+              animation: ModalRoute.of(context)!.animation!,
+              builder: (context, child) {
+                return FadeTransition(
+                  opacity: ModalRoute.of(context)!.animation!,
+                  child: const Text(
+                    'GeoAt',
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 20),
             // Full Name Input Field
@@ -214,7 +268,6 @@ class SignUpScreen extends StatelessWidget {
             // Sign-Up Button
             ElevatedButton(
               onPressed: () {
-                // Show loading and navigate to sign-in after sign-up
                 _navigateWithLoading(context, '/signin');
               },
               style: ElevatedButton.styleFrom(
@@ -227,11 +280,28 @@ class SignUpScreen extends StatelessWidget {
             // Already have an account? Sign in link
             TextButton(
               onPressed: () {
-                // Show loading before navigating to sign-in
-                _navigateWithLoading(context, '/signin');
+                Navigator.pushNamed(context, '/signin'); // Navigate to SignInScreen
               },
               child: const Text('Already have an account? Sign in'),
             ),
+            const Spacer(),
+            // Contact Information Row at the bottom
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Contact: '),
+                Text('123-456-7890', style: TextStyle(color: Colors.blue)),
+                SizedBox(width: 10),
+                Text('Email: '),
+                Text('support@geoat.com', style: TextStyle(color: Colors.blue)),
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Terms and Conditions & Copyright Info
+            const Text('Terms & Conditions'),
+            const SizedBox(height: 10),
+            const Text('© 2024 GeoAt. All rights reserved.'),
+            const SizedBox(height: 10),
           ],
         ),
       ),
@@ -239,7 +309,7 @@ class SignUpScreen extends StatelessWidget {
   }
 }
 
-
+// Loading Screen
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen({Key? key}) : super(key: key);
 
@@ -249,10 +319,10 @@ class LoadingScreen extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            CircularProgressIndicator(),
+          children: [
+            CircularProgressIndicator(), // Show a loading indicator
             SizedBox(height: 20),
-            Text('Loading...', style: TextStyle(fontSize: 18)),
+            Text('Loading... Please wait'),
           ],
         ),
       ),
@@ -260,18 +330,26 @@ class LoadingScreen extends StatelessWidget {
   }
 }
 
-
-
+// Loading navigation helper function
 Future<void> _navigateWithLoading(BuildContext context, String route) async {
-  // Show loading screen
+  // Check if the widget is still mounted after the async delay
+  if (!context.mounted) return;
+
+  // Show the loading screen
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => const LoadingScreen()),
   );
 
-  // Simulate a delay
+  // Simulate a delay (e.g., a network call)
   await Future.delayed(const Duration(seconds: 2));
 
-  // Navigate to the actual screen after the delay
+  // Check again if the widget is still mounted before proceeding
+  if (!context.mounted) return;
+
+  // Pop the loading screen
+  Navigator.pop(context);
+
+  // Navigate to the actual screen
   Navigator.pushReplacementNamed(context, route);
 }
