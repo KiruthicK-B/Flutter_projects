@@ -10,7 +10,9 @@
 analyzer:
   errors:
     depend_on_referenced_packages: ignore
+    unnecessary_string_escapes: ignore
     unused_element: ignore
+    unused_import: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

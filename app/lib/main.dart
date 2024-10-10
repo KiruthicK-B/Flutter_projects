@@ -1,6 +1,9 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'index.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,17 +23,36 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/signin': (context) => const SignInScreen(),
         '/signup': (context) => const SignUpScreen(),
+        '/index': (context) => const IndexScreen(),
 
       },
     );
   }
 }
 
+class IndexScreen extends StatelessWidget {
+  const IndexScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Index Screen'),
+      ),
+      body: const Center(
+        child: Text('This is the Index Screen'),
+      ),
+    );
+  }
+}
+
+
 // Splash Screen
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
+  // ignore: duplicate_ignore
   // ignore: library_private_types_in_public_api
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -361,7 +383,10 @@ class SignInScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Handle sign-in logic
+                // Navigate to the tick animation for sign-in success
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const TickAnimation(message: 'Login Successful')),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
@@ -380,6 +405,33 @@ class SignInScreen extends StatelessWidget {
                     Navigator.pushNamed(context, '/signup');
                   },
                   child: const Text('Register'),
+                ),
+              ],
+            ),
+            const Spacer(), // Push footer to the bottom
+            // Footer Section
+            const SizedBox(height: 20),
+            Column(
+              children: [
+                const Text(
+                  'Contact: support@example.com',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () {
+                    // Handle Terms & Conditions action
+                    // For example: Navigator.pushNamed(context, '/terms');
+                  },
+                  child: const Text(
+                    'Terms & Conditions',
+                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '© 2024 Rights Reserved',
+                  style: TextStyle(color: Colors.grey),
                 ),
               ],
             ),
@@ -504,9 +556,10 @@ class SignUpScreen extends StatelessWidget {
 }
 
 class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({super.key});
+  const VerificationScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: duplicate_ignore
   // ignore: library_private_types_in_public_api
   _VerificationScreenState createState() => _VerificationScreenState();
 }
@@ -526,6 +579,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_otpFocusNodes[0]); // Focus on the first OTP field
     });
+    _startResendCodeTimer();
   }
 
   @override
@@ -541,13 +595,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
   void _startResendCodeTimer() {
-    // Reset the timer state
     setState(() {
       _timerDuration = 20;
       _isTimerRunning = true;
     });
 
-    // Start the countdown timer
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_timerDuration > 0) {
@@ -561,35 +613,21 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
   void _verifyOTP() async {
-    // Show loading screen
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return const Center(child: CircularProgressIndicator());
-      },
+    // Show tick animation
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const TickAnimation(message: '',)),
     );
 
-    // Simulate network delay for OTP verification
-    await Future.delayed(const Duration(seconds: 2));
+    // Wait for 5 seconds before navigating to the index screen
+    await Future.delayed(const Duration(seconds: 3));
 
-    // Close loading screen
-    if (mounted) {
-      Navigator.pop(context);
-
-      // Navigate to sign-up screen after successful OTP verification
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const SignUpScreen()),
-      );
-    }
+    // Navigate to the index screen after successful OTP verification
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacementNamed(context, '/index');
   }
 
   @override
   Widget build(BuildContext context) {
-    // Start the timer whenever the build method is called (i.e., when the page is visited)
-    _startResendCodeTimer();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -645,7 +683,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ),
                   ),
                   child: const Text(
-                    'Continue',
+                    'Verify',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
@@ -689,6 +727,57 @@ class _VerificationScreenState extends State<VerificationScreen> {
             FocusScope.of(context).previousFocus(); // Move to previous field
           }
         },
+      ),
+    );
+  }
+}
+
+class TickAnimation extends StatefulWidget {
+  const TickAnimation({Key? key, required String message}) : super(key: key);
+
+  @override
+  _TickAnimationState createState() => _TickAnimationState();
+}
+
+class _TickAnimationState extends State<TickAnimation> {
+  @override
+  void initState() {
+    super.initState();
+    
+    // Start a 5-second timer and navigate to the HomeScreen (index.dart)
+    Future.delayed(const Duration(seconds: 2), () {
+      // After 5 seconds, navigate to the HomeScreen from index.dart
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()), // Ensure HomeScreen is in index.dart
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.check_circle,
+              color: Colors.green,
+              size: 100,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Successfully Done',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
