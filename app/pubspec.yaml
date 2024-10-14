@@ -12,20 +12,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  fl_chart: ^0.50.6  
+  timeline_tile: 2.0.0
 
 
   # Add any other dependencies you need
-  carousel_slider: ^4.0.0  # For the onboarding carousel
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0  # Recommended lints package for Flutter projects
+  # Add any other dev dependencies
 
 flutter:
 
-  # The assets to include in the project (your images)
+  # The assets to include in the project (images, icons, etc.)
   assets:
     - assets/logo.png
     - assets/onboarding_image.png
@@ -36,8 +37,11 @@ flutter:
     - assets/Splash3.jpg
     - assets/profile.jpeg
 
-  uses-material-design: true
+  uses-material-design: true  # Enables Material Design in the app
 
-
-   # Path to your icon file
+# If you are configuring app icons with `flutter_launcher_icons`, do it here:
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/Splash3.png"
 
